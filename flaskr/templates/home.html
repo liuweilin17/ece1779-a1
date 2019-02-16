@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Home</title>
+<!--<link rel="stylesheet" href="static/css/home.css">-->
+<link rel="stylesheet" href="static/lightbox2-master/dist/css/lightbox.min.css">
+{% endblock%}
+
+{% block content %}
+<section>
+    <h3>Your images</h3>
+    <ul class="list-group list-group-flush">
+        {% for id, raw_thumb, raw, faces_thumb, faces in images %}
+        <li class="list-group-item">
+          <a class="" href="static/images/{{ raw }}" data-lightbox="{{ id }}" data-title="Original version">
+              <img src="static/images/{{ raw_thumb }}" alt=""/>
+          </a>
+          <a class="" href="static/images/{{ faces }}" data-lightbox="{{ id }}" data-title="Detected version">
+              <img src="static/images/{{ faces_thumb }}" alt="" />
+          </a>
+        </li>
+        {% endfor %}
+    </ul>
+  </section>
+{% endblock %}
+
+{% block footer %}
+<script src="static/lightbox2-master/dist/js/lightbox-plus-jquery.min.js"></script>
+<script src="static/js/home.js"></script>
+{% endblock%}

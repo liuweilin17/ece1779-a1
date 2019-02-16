@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Upload</title>
+<link rel="stylesheet" href="static/css/upload.css">
+{% endblock%}
+
+{% block content %}
+<div class="card text-center">
+    <div class="card-header">
+        Upload images
+    </div>
+    <div class="card-body">
+        <div class="row" id="img-alert"></div>
+        <form class="row" id="uploadForm" method="post" enctype="multipart/form-data">
+            <div class="custom-file col-5">
+                <input type="file" class="custom-file-input" id="customFile" name="customFile">
+                <label class="custom-file-label" for="customFile">Choose your files</label>
+            </div>
+            <div class="col-4">
+                <img class="custom-img" id="customImg" src="#">
+                <p id="img-size"></p>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-success" id="uploadBtn">upload</button>
+                <button class="btn btn-danger" id="abortBtn">reset</button>
+            </div>
+        </form>
+        <div class="row text-center" >
+            <img class="faces-img" id="facesImg" src="#">
+        </div>
+    </div>
+    <p>progress bar</p>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script src="static/js/upload.js"></script>
+{% endblock%}
