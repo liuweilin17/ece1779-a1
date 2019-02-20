@@ -23,41 +23,47 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 def save_file(file):
-    output_img = ''
-    filename = secure_filename(file.filename)
-    filetype = filename.rsplit('.', 1)[1].lower()
-    img_key = hashlib.md5(file.read()).hexdigest()
-    filename = img_key + '.' + filetype
-    userid=session['user']['userid']
-    image = Image.query.filter_by(path=filename, userid=userid).first()
+    try:
+        output_img = ''
+        filename = secure_filename(file.filename)
+        filetype = filename.rsplit('.', 1)[1].lower()
+        img_key = hashlib.md5(file.read()).hexdigest()
+        filename = img_key + '.' + filetype
+        userid=session['user']['userid']
+        image = Image.query.filter_by(path=filename, userid=userid).first()
 
-    if not image: # file not exists for userid
-        print("new image")
-        # set the cursor to the beginning of the file
-        file.seek(0)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if not image: # file not exists for userid
+            print("new image")
+            # set the cursor to the beginning of the file
+            file.seek(0)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        # create thumbnail
-        size = [200, 200]
-        thumb = thumbs.Thumbs(size)
-        thumb.run(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print("create thumbnail of raw")
+            # create thumbnail
+            size = [200, 200]
+            thumb = thumbs.Thumbs(size)
+            thumb.run(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print("create thumbnail of raw")
 
-        # face detect
-        ft = face_detect_cv3.FaceDetect()
-        faceNum, output_img = ft.run(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print("face detection")
-        if output_img:
-            thumb.run(output_img)
-            print("create thumbnail of faces")
+            # face detect
+            ft = face_detect_cv3.FaceDetect()
+            faceNum, output_img = ft.run(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print("face detection")
+            if output_img:
+                thumb.run(output_img)
+                print("create thumbnail of faces")
 
-        # insert new image path
-        image1 = Image(path=filename, userid=session['user']['userid'])
-        db.session.add(image1)
-        db.session.commit()
-        print('insert new image path into database')
+            # insert new image path
+            image1 = Image(path=filename, userid=session['user']['userid'])
+            db.session.add(image1)
+            db.session.commit()
+            print('insert new image path into database')
 
-    return img_key + '_faces.' + filetype
+        return img_key + '_faces.' + filetype
+
+    except Exception as e:
+        # print(e)
+        traceback.print_tb(e.__traceback__)
+        return ''
 
 def checkImageRequest(request):
     valid, msg, file = True, '', None
@@ -99,4 +105,4 @@ def uploadImage():
     except Exception as e:
         # print(e)
         traceback.print_tb(e.__traceback__)
-        return render_template('error.html', msg='something goes wrong~')
+        return ''

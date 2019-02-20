@@ -23,10 +23,15 @@ $("#uploadBtn").click(function(){
             cache: false,
             processData: false,
             success: function(data) {
-                $("#facesImg").attr('src', 'static/images/' + data);
-                $("#facesImg").show()
-                $("#customImg").hide()
-                $("#img-size").html('Upload Success!')
+                console.log(data)
+                if (data == '') {
+                    $("#img-size").html('Upload Fail!')
+                } else {
+                    $("#facesImg").attr('src', 'static/images/' + data);
+                    $("#facesImg").show()
+                    $("#customImg").hide()
+                    $("#img-size").html('Upload Success!')
+                }
             },
         });
     }
