@@ -7,6 +7,7 @@ import hashlib
 from flaskr.models import Image
 from flaskr.openCV import face_detect_cv3
 from flaskr.Pillow import thumbs
+import traceback
 
 @app.route('/upload')
 def upload():
@@ -31,25 +32,30 @@ def save_file(file):
     image = Image.query.filter_by(path=filename, userid=userid).first()
 
     if not image: # file not exists for userid
+        print("new image")
         # set the cursor to the beginning of the file
         file.seek(0)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-        # insert new image path
-        image1 = Image(path=filename, userid=session['user']['userid'])
-        db.session.add(image1)
-        db.session.commit()
 
         # create thumbnail
         size = [200, 200]
         thumb = thumbs.Thumbs(size)
         thumb.run(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        print("create thumbnail of raw")
 
         # face detect
         ft = face_detect_cv3.FaceDetect()
         faceNum, output_img = ft.run(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        print("face detection")
         if output_img:
             thumb.run(output_img)
+            print("create thumbnail of faces")
+
+        # insert new image path
+        image1 = Image(path=filename, userid=session['user']['userid'])
+        db.session.add(image1)
+        db.session.commit()
+        print('insert new image path into database')
 
     return img_key + '_faces.' + filetype
 
@@ -82,8 +88,15 @@ def checkImageRequest(request):
 
 @app.route('/uploadImage', methods=['GET', 'POST'])
 def uploadImage():
-    valid, msg, file = checkImageRequest(request)
-    output_img = ''
-    if valid:
-        output_img = save_file(file)
-    return output_img
+    try:
+        valid, msg, file = checkImageRequest(request)
+        print(msg)
+        output_img = ''
+        if valid:
+            output_img = save_file(file)
+        return output_img
+
+    except Exception as e:
+        # print(e)
+        traceback.print_tb(e.__traceback__)
+        return render_template('error.html', msg='something goes wrong~')
