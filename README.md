@@ -4,4 +4,4 @@
 * flask, flask-wtf, flask-sqlalchemy
 * opencv
 * pillow
-* pysql
+* pymysql
