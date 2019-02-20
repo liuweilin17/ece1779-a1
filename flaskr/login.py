@@ -81,3 +81,23 @@ def register():
             flash(message, "danger")
 
     return render_template('register.html', form=form)
+
+
+@app.route('/api/register', methods=['POST'])
+def register_api():
+    username = str(request.args.get('name'))
+    password = str(request.args.get('password'))
+
+    # if user is exist
+    user = User.query.filter_by(username=username).first()
+    if user:
+        return 'Username has already existed'
+    else:
+        salt = base64.urlsafe_b64encode(uuid.uuid4().bytes)
+        salt = salt.decode('utf-8')
+        password_hash = hash_password(salt, password)
+        user = User(username=username, password_hash=password_hash, salt=salt)
+        db.session.add(user)
+        db.session.commit()
+
+    return 'Sign up successfully!'
