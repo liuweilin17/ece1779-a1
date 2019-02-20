@@ -8,7 +8,11 @@
 
 {% block content %}
 <section>
-    <h3>Your images</h3>
+    <div class="card">
+    <div class="card-header">
+        Images List
+    </div>
+    <div class="card-body">
     <ul class="list-group list-group-flush">
         {% for id, raw_thumb, raw, faces_thumb, faces in images %}
         <li class="list-group-item">
@@ -21,6 +25,8 @@
         </li>
         {% endfor %}
     </ul>
+    </div>
+    </div>
   </section>
 {% endblock %}
 

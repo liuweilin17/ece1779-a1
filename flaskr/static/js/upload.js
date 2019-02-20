@@ -22,13 +22,17 @@ $("#uploadBtn").click(function(){
             contentType: false,
             cache: false,
             processData: false,
+            beforeSend: function() {
+                $('#facesDiv').html("<img class='loading' src='static/img/loading.gif'>");
+            },
             success: function(data) {
                 console.log(data)
                 if (data == '') {
-                    $("#img-size").html('Upload Fail!')
+                    $("#img-size").html('Upload Fail!');
+                    $('#facesDiv').html('');
                 } else {
+                    $('#facesDiv').html("<img class='faces-img center' id='facesImg'>");
                     $("#facesImg").attr('src', 'static/images/' + data);
-                    $("#facesImg").show()
                     $("#customImg").hide()
                     $("#img-size").html('Upload Success!')
                 }
@@ -40,7 +44,7 @@ $("#uploadBtn").click(function(){
 $("#abortBtn").click(function(){
     $('#uploadForm')[0].reset();
     $('#customImg').hide();
-    $('#facesImg').hide();
+    $('#facesDiv').html('');
     $("#img-size").hide();
     $("#img-alert").html('');
     $('#customFile').next('.custom-file-label').html('Choose your files');
@@ -56,8 +60,8 @@ function checkImg(input) {
         } else {
             var size = Math.round(input.files[0].size/1000)
             var type = input.files[0].type
-            if (size > 500) {
-                msg = 'The maximum file size is 500kB.'
+            if (size > 10000) {
+                msg = 'The maximum file size is 10MB.'
             } else if ($.inArray(input.files[0].type, ['image/jpeg', 'image/jpg', 'image/png']) == -1) {
                 msg = 'Valid file type is image/jpeg, image/jpg or image/png.'
             } else {
