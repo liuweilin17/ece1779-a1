@@ -20,17 +20,12 @@ def upload():
         return render_template('upload.html')
 
 def allowed_file(filename):
-    if filename == 'file':
-        return True
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 def save_file(file, userid=''):
     try:
-        output_img = ''
         filename = secure_filename(file.filename)
-        if filename == 'file':
-            filename = 'file.png'
         filetype = filename.rsplit('.', 1)[1].lower()
         img_key = hashlib.md5(file.read()).hexdigest()
         filename = img_key + '.' + filetype
@@ -145,11 +140,12 @@ def upload_api():
                     if not file:
                         message = 'file is empty'
                     elif not allowed_file(filename):
+                        print(filename)
                         message = 'invalid file type'
                     else:
                         # updload file
                         save_file(file, user.userid)
-                        message = file.filename + 'upload success'
+                        message = file.filename + ' upload success'
                 else:
                     message = 'no selected file'
             else:
