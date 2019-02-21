@@ -20,6 +20,8 @@ def upload():
         return render_template('upload.html')
 
 def allowed_file(filename):
+    if filename == 'file':
+        return True
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
@@ -27,6 +29,8 @@ def save_file(file, userid=''):
     try:
         output_img = ''
         filename = secure_filename(file.filename)
+        if filename == 'file':
+            filename = 'file.png'
         filetype = filename.rsplit('.', 1)[1].lower()
         img_key = hashlib.md5(file.read()).hexdigest()
         filename = img_key + '.' + filetype
@@ -55,7 +59,7 @@ def save_file(file, userid=''):
                 print("create thumbnail of faces")
 
             # insert new image path
-            image1 = Image(path=filename, userid=session['user']['userid'])
+            image1 = Image(path=filename, userid=userid)
             db.session.add(image1)
             db.session.commit()
             print('insert new image path into database')
@@ -141,12 +145,9 @@ def upload_api():
                     if not file:
                         message = 'file is empty'
                     elif not allowed_file(filename):
-                        #print(request)
-                        #print(request.headers['Content-Disposition']['attachment'])
-                        #save_file(file, user.userid)
-                        #file.save('hh')
                         message = 'invalid file type'
-                    else: # updload file
+                    else:
+                        # updload file
                         save_file(file, user.userid)
                         message = file.filename + 'upload success'
                 else:
