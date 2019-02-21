@@ -100,8 +100,8 @@ def uploadImage():
         output_img = ''
         if valid:
             output_img = save_file(file)
-        for i in range(100000000):
-            pass
+        # for i in range(100000000):
+        #     pass
         return output_img
 
     except Exception as e:

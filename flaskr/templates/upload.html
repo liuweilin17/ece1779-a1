@@ -11,16 +11,13 @@
         Upload images
     </div>
     <div class="card-body">
-        <div class="row" id="img-alert"></div>
         <form class="row" id="uploadForm" method="post" enctype="multipart/form-data">
             <div class="custom-file col-5">
                 <input type="file" class="custom-file-input" id="customFile" name="customFile">
                 <label class="custom-file-label" for="customFile">Choose your files</label>
             </div>
-            <div class="col-4">
-                <img class="custom-img" id="customImg" src="#">
-                <p id="img-size"></p>
-            </div>
+            <div class="col-3" id="custom-div"></div>
+            <div class="col-1" id="img-size-div"></div>
             <div class="col-3">
                 <button class="btn btn-success" id="uploadBtn">upload</button>
                 <button class="btn btn-danger" id="abortBtn">reset</button>
@@ -30,6 +27,7 @@
 </div>
 <div class="card">
     <div class="card-body">
+        <div class="row" id="img-alert"></div>
         <div class="row" id="facesDiv"></div>
     </div>
 </div>

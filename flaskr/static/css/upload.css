@@ -1,7 +1,6 @@
 .custom-img {
-    display: none;
-    width: 100%;
-    height: 100%;
+    width: 90%;
+    height: 90%;
     max-width: 70px;
     max-height: 70px;
 }
