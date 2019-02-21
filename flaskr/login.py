@@ -99,7 +99,7 @@ def register():
 @app.route('/api/register', methods=['POST'])
 def register_api():
     try:
-        username = str(request.args.get('name'))
+        username = str(request.args.get('username'))
         password = str(request.args.get('password'))
 
         # if user is exist
