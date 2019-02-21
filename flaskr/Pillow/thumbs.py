@@ -2,7 +2,7 @@ from PIL import Image
 import os
 
 class Thumbs():
-    def __init__(self, size=[120, 120]):
+    def __init__(self, size=[100, 100]):
         self.size = size
 
     def run(self, input_img):
