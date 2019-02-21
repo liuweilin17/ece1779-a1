@@ -55,7 +55,7 @@ def save_file(file, userid=''):
                 print("create thumbnail of faces")
 
             # insert new image path
-            image1 = Image(path=filename, userid=session['user']['userid'])
+            image1 = Image(path=filename, userid=userid)
             db.session.add(image1)
             db.session.commit()
             print('insert new image path into database')
@@ -113,6 +113,7 @@ def uploadImage():
 
 @app.route('/api/upload', methods=['POST'])
 def upload_api():
+    print('upload_api')
     try:
         if request.method != 'POST':
             return 'invalid request method'
@@ -141,10 +142,7 @@ def upload_api():
                     if not file:
                         message = 'file is empty'
                     elif not allowed_file(filename):
-                        #print(request)
-                        #print(request.headers['Content-Disposition']['attachment'])
-                        #save_file(file, user.userid)
-                        #file.save('hh')
+                        #print(filename)
                         message = 'invalid file type'
                     else: # updload file
                         save_file(file, user.userid)
