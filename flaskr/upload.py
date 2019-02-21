@@ -4,10 +4,11 @@ from flaskr import db
 from werkzeug.utils import secure_filename
 import os
 import hashlib
-from flaskr.models import Image
+from flaskr.models import Image, User
 from flaskr.openCV import face_detect_cv3
 from flaskr.Pillow import thumbs
 import traceback
+from flaskr.login import hash_password
 
 @app.route('/upload')
 def upload():
@@ -22,14 +23,15 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-def save_file(file):
+def save_file(file, userid=''):
     try:
         output_img = ''
         filename = secure_filename(file.filename)
         filetype = filename.rsplit('.', 1)[1].lower()
         img_key = hashlib.md5(file.read()).hexdigest()
         filename = img_key + '.' + filetype
-        userid=session['user']['userid']
+        if not userid:
+            userid=session['user']['userid']
         image = Image.query.filter_by(path=filename, userid=userid).first()
 
         if not image: # file not exists for userid
@@ -61,7 +63,7 @@ def save_file(file):
         return img_key + '_faces.' + filetype
 
     except Exception as e:
-        # print(e)
+        print(e)
         traceback.print_tb(e.__traceback__)
         return ''
 
@@ -108,3 +110,53 @@ def uploadImage():
         # print(e)
         traceback.print_tb(e.__traceback__)
         return ''
+
+@app.route('/api/upload', methods=['POST'])
+def upload_api():
+    try:
+        if request.method != 'POST':
+            return 'invalid request method'
+
+        # check user
+        valid = True
+        username = request.values['username']
+        password = request.values['password']
+
+        user = User.query.filter_by(username=username).first()
+        if user:
+            password_hash = hash_password(user.salt, password)
+            user = User.query.filter_by(username=username, password_hash=password_hash).first()
+            if not user:
+                valid = False
+                message = "Username or Password does not exist"
+        else:
+            valid = False
+            message = "Username or Password does not exist"
+
+        if valid:
+            if 'file' in request.files:
+                file = request.files['file']
+                filename = secure_filename(file.filename)
+                if filename != '':
+                    if not file:
+                        message = 'file is empty'
+                    elif not allowed_file(filename):
+                        #print(request)
+                        #print(request.headers['Content-Disposition']['attachment'])
+                        #save_file(file, user.userid)
+                        #file.save('hh')
+                        message = 'invalid file type'
+                    else: # updload file
+                        save_file(file, user.userid)
+                        message = file.filename + 'upload success'
+                else:
+                    message = 'no selected file'
+            else:
+                message = 'no name [file] in form data'
+
+        return message
+
+    except Exception as e:
+        print(e)
+        traceback.print_tb(e.__traceback__)
+        return 'Upload Fail'
