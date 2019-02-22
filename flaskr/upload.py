@@ -6,7 +6,7 @@ import os
 import hashlib
 from flaskr.models import Image, User
 from flaskr.openCV import face_detect_cv3
-from flaskr.Pillow import thumbs
+from flaskr.pillow import thumbs
 import traceback
 from flaskr.login import hash_password
 
