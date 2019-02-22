@@ -66,7 +66,7 @@ def save_file(file, userid=''):
         traceback.print_tb(e.__traceback__)
         return ''
 
-def checkImageRequest(request):
+def check_image_request(request):
     valid, msg, file = True, '', None
     if request.method == 'POST':
         if 'customFile' in request.files:
@@ -94,9 +94,9 @@ def checkImageRequest(request):
     return [valid, msg, file]
 
 @app.route('/uploadImage', methods=['GET', 'POST'])
-def uploadImage():
+def upload_image():
     try:
-        valid, msg, file = checkImageRequest(request)
+        valid, msg, file = check_image_request(request)
         print(msg)
         output_img = ''
         if valid:
