@@ -9,3 +9,4 @@ db = SQLAlchemy(app)
 from flaskr import home
 from flaskr import login
 from flaskr import upload
+from flaskr import error
