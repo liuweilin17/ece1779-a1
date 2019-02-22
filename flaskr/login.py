@@ -1,5 +1,3 @@
-# handle login, logout and register
-
 from flask import render_template, request, flash, redirect, url_for, session
 from flaskr import app
 from flaskr import forms
