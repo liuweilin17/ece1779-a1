@@ -6,5 +6,5 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
                               'mysql+pymysql://liuwl:liuwl@localhost/ece1779'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    UPLOAD_FOLDER = basedir + '/images'
+    UPLOAD_FOLDER = basedir + '/static/images'
     ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
