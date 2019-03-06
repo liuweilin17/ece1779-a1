@@ -1,15 +1,13 @@
-# access to the home page
-
 from flask import render_template, url_for, session, redirect
 from flaskr import app
 from flaskr.models import Image
 import traceback
 
-def getFaces(img):
+def get_faces(img):
     name, type = img.rsplit('.')
     return name + '_faces.' + type
 
-def getThumbs(img):
+def get_thumbs(img):
     name, type = img.rsplit('.')
     return name + '_thumb.' + type
 
@@ -22,7 +20,8 @@ def home():
     else:
         try:
             images = Image.query.filter_by(userid=user['userid'])
-            images = [[image.imageid, getThumbs(image.path), image.path, getThumbs(getFaces(image.path)), getFaces(image.path)] for image in images]
+            images = [[image.imageid, get_thumbs(image.path), image.path,
+                       get_thumbs(get_faces(image.path)), get_faces(image.path)] for image in images]
             return render_template('home.html', images=images)
         except Exception as e:
             # print(e)
